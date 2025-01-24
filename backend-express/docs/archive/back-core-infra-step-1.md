@@ -22,24 +22,16 @@ We have set up a basic Express backend with:
 
 ## Testing the Implementation
 
-1. First, set up the database:
+1. First, start the Docker environment:
 ```bash
-# Create .env file from example
-cp .env.example .env
+# Start development environment
+docker-compose up --build
 
-# Update DATABASE_URL in .env with your PostgreSQL credentials
-DATABASE_URL=postgresql://username:password@localhost:5432/lightpost
-
-# Initialize database
-npm run db:init
+# Initialize database (in a new terminal)
+docker exec -i backend-express-db-1 psql -U postgres -d lightpost < src/db/init.sql
 ```
 
-2. Start the server:
-```bash
-npm run dev
-```
-
-3. Test endpoints using curl:
+2. Test endpoints using curl:
 ```bash
 # Health check
 curl http://localhost:3000/health
@@ -59,6 +51,28 @@ curl -X POST http://localhost:3000/api/posts \
     "category_id": 1,
     "tags": ["test", "first"]
   }'
+```
+
+## Troubleshooting
+1. If database connection fails:
+```bash
+# Check if postgres container is running
+docker ps
+
+# View logs
+docker logs backend-express-db-1
+
+# Ensure init script ran
+docker exec backend-express-db-1 psql -U postgres -d lightpost -c "\dt"
+```
+
+2. If API requests fail:
+```bash
+# Check API logs
+docker logs backend-express-api-1
+
+# Verify API is running
+curl http://localhost:3000/health
 ```
 
 ## Next Steps

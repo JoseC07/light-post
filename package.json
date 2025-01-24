@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "db:init": "docker exec -i postgres_container psql -U postgres -d postgres < src/db/init.sql"
+  }
+} 

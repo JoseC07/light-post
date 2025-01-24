@@ -1,0 +1,32 @@
+# Test creating a new post
+curl -X POST http://localhost:3000/api/posts \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Test Post",
+    "content": "This is a test post content",
+    "categoryId": 1,
+    "tags": ["test", "api"]
+  }'
+
+# Test getting all posts
+s
+# Test getting posts by category
+curl http://localhost:3000/api/posts?categoryId=1
+
+# Test updating a post
+curl -X PUT http://localhost:3000/api/posts/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Updated Test Post",
+    "content": "This is updated content"
+  }'
+
+# Test voting on a post
+curl -X POST http://localhost:3000/api/posts/1/vote \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "upvote"
+  }'
+
+# Test getting posts with tag filter
+curl http://localhost:3000/api/posts?tags=test
