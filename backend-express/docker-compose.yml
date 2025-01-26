@@ -18,15 +18,32 @@ services:
       - db
 
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     ports:
       - "5433:5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=lightpost
+      POSTGRES_DB: testdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d testdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  test:
+    build:
+      context: .
+      target: test
+    command: pnpm test
+    environment:
+      NODE_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@db:5432/testdb
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:

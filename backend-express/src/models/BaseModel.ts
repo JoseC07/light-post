@@ -9,7 +9,7 @@ export default class BaseModel {
   }
 
   protected async executeQuery<T extends QueryResultRow>(query: string, params?: any[]): Promise<QueryResult<T>> {
-    const client = await pool.connect();
+    const client = await pool.getPool().connect();
     try {
       return await client.query<T>(query, params);
     } finally {
